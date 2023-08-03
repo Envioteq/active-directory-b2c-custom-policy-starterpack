@@ -19,7 +19,7 @@
 <!--      </TechnicalProfiles>-->
 <!--    </ClaimsProvider>-->
     <ClaimsProvider>
-      <DisplayName>Local Account SignIn</DisplayName>
+      <DisplayName>Local Account SignIn updated</DisplayName>
       <TechnicalProfiles>
         <TechnicalProfile Id="login-NonInteractive">
           <Metadata>
@@ -43,7 +43,7 @@
       <DisplayName>Common AAD</DisplayName>
       <TechnicalProfiles>
         <TechnicalProfile Id="AADCommon-OpenIdConnect">
-          <DisplayName>Sign in using your Active Directory</DisplayName>
+          <DisplayName>External Active Directory Signin updated123</DisplayName>
           <Description>Login with your Contoso account</Description>
           <Protocol Name="OpenIdConnect"/>
           <Metadata>
@@ -93,30 +93,17 @@
                   <Metadata>
                       <Item Key="IssuanceClaimPattern">AuthorityWithTfp</Item>
                       <Item Key="AuthenticationContextReferenceClaimPattern">None</Item>
-                      <Item Key="client_id">{service:te}</Item>
-                      <Item Key="issuer_refresh_token_user_identity_claim_type">objectId</Item>
-                      <Item Key="SendTokenResponseBodyWithJsonNumbers">true</Item>
+<!--                      <Item Key="client_id">{service:te}</Item>-->
+<!--                      <Item Key="issuer_refresh_token_user_identity_claim_type">objectId</Item>-->
+<!--                      <Item Key="SendTokenResponseBodyWithJsonNumbers">true</Item>-->
                   </Metadata>
-                  <CryptographicKeys>
-                      <Key Id="issuer_secret" StorageReferenceId="B2C_1A_TokenSigningKeyContainer" />
-                      <Key Id="issuer_refresh_token_key" StorageReferenceId="B2C_1A_TokenEncryptionKeyContainer" />
-                  </CryptographicKeys>
+<!--                  <CryptographicKeys>-->
+<!--                      <Key Id="issuer_secret" StorageReferenceId="B2C_1A_TokenSigningKeyContainer" />-->
+<!--                      <Key Id="issuer_refresh_token_key" StorageReferenceId="B2C_1A_TokenEncryptionKeyContainer" />-->
+<!--                  </CryptographicKeys>-->
               </TechnicalProfile>
           </TechnicalProfiles>
       </ClaimsProvider>
-<!--      <ClaimsProvider>-->
-<!--        <DisplayName>Token Issuer</DisplayName>-->
-<!--        <TechnicalProfiles>-->
-<!--          <TechnicalProfile Id="JwtIssuer">-->
-<!--            <Protocol Name="OpenIdConnect" />-->
-<!--            <OutputTokenFormat>JWT</OutputTokenFormat>-->
-<!--            <Metadata>-->
-<!--              <Item Key="IssuanceClaimPattern">AuthorityWithTfp</Item>-->
-<!--              <Item Key="AuthenticationContextReferenceClaimPattern">None</Item>-->
-<!--            </Metadata>-->
-<!--          </TechnicalProfile>-->
-<!--        </TechnicalProfiles>-->
-<!--      </ClaimsProvider>-->
   </ClaimsProviders>
 
 

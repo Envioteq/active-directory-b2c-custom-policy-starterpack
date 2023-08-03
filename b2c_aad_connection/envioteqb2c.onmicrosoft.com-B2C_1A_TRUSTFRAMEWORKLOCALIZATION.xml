@@ -55,8 +55,9 @@
       <LocalizedResources Id="api.signuporsignin.en">
         <LocalizedStrings>
           <LocalizedString ElementType="ClaimType" ElementId="signInName" StringId="DisplayName">Email Address</LocalizedString>
-          <LocalizedString ElementType="UxElement" StringId="heading">Sign in</LocalizedString>
-          <LocalizedString ElementType="UxElement" StringId="local_intro_generic">Sign in with your {0}</LocalizedString>
+          <LocalizedString ElementType="UxElement" StringId="heading">Sign in updated</LocalizedString>
+          <LocalizedString ElementType="UxElement" StringId="local_intro_generic">Sign in with your {0} extended this</LocalizedString>
+          <LocalizedString ElementType="UxElement" StringId="social_intro">Welcome to a world of possibilities</LocalizedString>
           <LocalizedString ElementType="ClaimType" ElementId="password" StringId="DisplayName">Password</LocalizedString>
           <LocalizedString ElementType="UxElement" StringId="requiredField_password">Please enter your password</LocalizedString>
           <LocalizedString ElementType="UxElement" StringId="requiredField_generic">Please enter your {0}</LocalizedString>
@@ -182,7 +183,7 @@
       <LocalizedResources Id="api.idpselections.en">
         <LocalizedStrings>
           <LocalizedString ElementType="UxElement" StringId="intro">Sign in</LocalizedString>
-          <LocalizedString ElementType="ClaimsProvider" StringId="LocalAccountSigninEmailExchange">Local Account Signin</LocalizedString>
+          <LocalizedString ElementType="ClaimsProvider" StringId="LocalAccountSigninEmailExchange">Local Account Signin updated</LocalizedString>
           <LocalizedString ElementType="ClaimsProvider" StringId="FacebookExchange">Facebook</LocalizedString>
         </LocalizedStrings>
       </LocalizedResources>
@@ -191,7 +192,7 @@
         <LocalizedStrings>
           <LocalizedString ElementType="ClaimType" ElementId="signInName" StringId="DisplayName">Email Address</LocalizedString>
           <LocalizedString ElementType="ClaimType" ElementId="password" StringId="DisplayName">Password</LocalizedString>
-          <LocalizedString ElementType="UxElement" StringId="button_continue">Continue</LocalizedString>
+          <LocalizedString ElementType="UxElement" StringId="button_continue">Continue updated</LocalizedString>
           <LocalizedString ElementType="UxElement" StringId="button_cancel">Cancel</LocalizedString>
           <LocalizedString ElementType="ErrorMessage" StringId="ResourceOwnerFlowInvalidCredentials">Your password is incorrect.</LocalizedString>
           <LocalizedString ElementType="ErrorMessage" StringId="UserMessageIfInvalidPassword">Your password is incorrect.</LocalizedString>

@@ -856,7 +856,7 @@
         </TechnicalProfile>
         <!-- This technical profile uses a validation technical profile to authenticate the user. -->
         <TechnicalProfile Id="SelfAsserted-LocalAccountSignin-Email">
-          <DisplayName>Local Account Signin</DisplayName>
+          <DisplayName>Local Account Signin base update</DisplayName>
           <Protocol Name="Proprietary" Handler="Web.TPEngine.Providers.SelfAssertedAttributeProvider, Web.TPEngine, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" />
           <Metadata>
             <Item Key="SignUpTarget">SignUpWithLogonEmailExchange</Item>
