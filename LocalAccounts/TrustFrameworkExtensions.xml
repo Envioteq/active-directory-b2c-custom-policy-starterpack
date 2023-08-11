@@ -15,8 +15,11 @@
 
     <BuildingBlocks>
         <ClaimsSchema>
-            <ClaimType Id="testClaim">
-                <DisplayName>TestClaim</DisplayName>
+            <ClaimType Id="hasMfaEnabled">
+                <DataType>boolean</DataType>
+            </ClaimType>
+
+            <ClaimType Id="mfaRequestBody">
                 <DataType>string</DataType>
             </ClaimType>
 
@@ -220,6 +223,15 @@
           </ClaimsTransformation>-->
 
             <!-- end of TOTP Claims Transforms-->
+
+            <ClaimsTransformation Id="GenerateRequestBody" TransformationMethod="GenerateJson">
+                <InputClaims>
+                    <InputClaim ClaimTypeReferenceId="objectId" TransformationClaimType="authId" />
+                </InputClaims>
+                <OutputClaims>
+                    <OutputClaim ClaimTypeReferenceId="mfaRequestBody" TransformationClaimType="outputClaim"/>
+                </OutputClaims>
+            </ClaimsTransformation>
 
         </ClaimsTransformations>
 
@@ -541,9 +553,6 @@
                     <OutputClaims>
                         <!-- The userPrincipalName is required for the AzureMfaProtocolProvider technical profiles-->
                         <OutputClaim ClaimTypeReferenceId="userPrincipalName" />
-
-<!--                        <OutputClaim ClaimTypeReferenceId="testClaim" DefaultValue="abc" AlwaysUseDefaultValue="true" />-->
-                        <OutputClaim ClaimTypeReferenceId="testClaim" DefaultValue="" />
                     </OutputClaims>
                 </TechnicalProfile>
 
@@ -555,13 +564,20 @@
                         <Item Key="ServiceUrl">https://8fd5-2003-dd-3f4b-7e00-c81b-3d6c-7456-d700.ngrok-free.app/v2/mfa</Item>
                         <Item Key="AuthenticationType">ApiKeyHeader</Item>
                         <Item Key="SendClaimsIn">Body</Item>
+                        <Item Key="ClaimUsedForRequestPayload">mfaRequestBody</Item>
                     </Metadata>
                     <CryptographicKeys>
                         <Key Id="x-api-key" StorageReferenceId="B2C_1A_EucalyptusApiKey" />
                     </CryptographicKeys>
+                    <InputClaimsTransformations>
+                        <InputClaimsTransformation ReferenceId="GenerateRequestBody" />
+                    </InputClaimsTransformations>
+                    <InputClaims>
+                        <InputClaim ClaimTypeReferenceId="mfaRequestBody" />
+                    </InputClaims>
                     <OutputClaims>
                         <!-- PartnerClaimType can be omitted if it's the same as ClaimTypeReferenceId -->
-                        <OutputClaim ClaimTypeReferenceId="testClaim" PartnerClaimType="hasAccount" />
+                        <OutputClaim ClaimTypeReferenceId="hasMfaEnabled" PartnerClaimType="hasMfaEnabled" />
                     </OutputClaims>
                 </TechnicalProfile>
             </TechnicalProfiles>
@@ -627,7 +643,7 @@
                 <OrchestrationStep Order="4" Type="InvokeSubJourney">
                     <Preconditions>
                         <Precondition Type="ClaimEquals" ExecuteActionsIf="true">
-                            <Value>testClaim</Value>
+                            <Value>hasMfaEnabled</Value>
                             <Value>false</Value>
                             <Action>SkipThisOrchestrationStep</Action>
                         </Precondition>
@@ -641,7 +657,7 @@
                 <OrchestrationStep Order="5" Type="InvokeSubJourney">
                     <Preconditions>
                         <Precondition Type="ClaimEquals" ExecuteActionsIf="true">
-                            <Value>testClaim</Value>
+                            <Value>hasMfaEnabled</Value>
                             <Value>false</Value>
                             <Action>SkipThisOrchestrationStep</Action>
                         </Precondition>
