@@ -15,6 +15,11 @@
 
     <BuildingBlocks>
         <ClaimsSchema>
+            <ClaimType Id="testClaim">
+                <DisplayName>TestClaim</DisplayName>
+                <DataType>string</DataType>
+            </ClaimType>
+
             <!--TOTP claims-->
             <ClaimType Id="emails">
                 <DisplayName>Email Addresses</DisplayName>
@@ -536,6 +541,27 @@
                     <OutputClaims>
                         <!-- The userPrincipalName is required for the AzureMfaProtocolProvider technical profiles-->
                         <OutputClaim ClaimTypeReferenceId="userPrincipalName" />
+
+<!--                        <OutputClaim ClaimTypeReferenceId="testClaim" DefaultValue="abc" AlwaysUseDefaultValue="true" />-->
+                        <OutputClaim ClaimTypeReferenceId="testClaim" DefaultValue="" />
+                    </OutputClaims>
+                </TechnicalProfile>
+
+
+                <TechnicalProfile Id="REST-API-Test">
+                    <DisplayName>Validate user's input data and return loyaltyNumber claim</DisplayName>
+                    <Protocol Name="Proprietary" Handler="Web.TPEngine.Providers.RestfulProvider, Web.TPEngine, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" />
+                    <Metadata>
+                        <Item Key="ServiceUrl">https://8fd5-2003-dd-3f4b-7e00-c81b-3d6c-7456-d700.ngrok-free.app/v2/mfa</Item>
+                        <Item Key="AuthenticationType">ApiKeyHeader</Item>
+                        <Item Key="SendClaimsIn">Body</Item>
+                    </Metadata>
+                    <CryptographicKeys>
+                        <Key Id="x-api-key" StorageReferenceId="B2C_1A_EucalyptusApiKey" />
+                    </CryptographicKeys>
+                    <OutputClaims>
+                        <!-- PartnerClaimType can be omitted if it's the same as ClaimTypeReferenceId -->
+                        <OutputClaim ClaimTypeReferenceId="testClaim" PartnerClaimType="hasAccount" />
                     </OutputClaims>
                 </TechnicalProfile>
             </TechnicalProfiles>
@@ -564,6 +590,9 @@
 
     </ClaimsProviders>
 
+
+    <!-- USER JOURNEYS START -->
+
     <UserJourneys>
 
         <UserJourney Id="CustomSignUpOrSignIn">
@@ -587,21 +616,42 @@
                     </ClaimsExchanges>
                 </OrchestrationStep>
 
+                <!-- backend api call to check if mfa is enabled -->
+                <OrchestrationStep Order="3" Type="ClaimsExchange">
+                    <ClaimsExchanges>
+                        <ClaimsExchange Id="QueryMfaEnabled" TechnicalProfileReferenceId="REST-API-Test" />
+                    </ClaimsExchanges>
+                </OrchestrationStep>
+
                 <!-- Call the TOTP enrollment ub journey. If user already enrolled the sub journey will not ask the user to enroll -->
-                <OrchestrationStep Order="3" Type="InvokeSubJourney">
+                <OrchestrationStep Order="4" Type="InvokeSubJourney">
+                    <Preconditions>
+                        <Precondition Type="ClaimEquals" ExecuteActionsIf="true">
+                            <Value>testClaim</Value>
+                            <Value>false</Value>
+                            <Action>SkipThisOrchestrationStep</Action>
+                        </Precondition>
+                    </Preconditions>
                     <JourneyList>
                         <Candidate SubJourneyReferenceId="TotpFactor-Input" />
                     </JourneyList>
                 </OrchestrationStep>
 
                 <!-- Call the TOTP validation sub journey-->
-                <OrchestrationStep Order="4" Type="InvokeSubJourney">
+                <OrchestrationStep Order="5" Type="InvokeSubJourney">
+                    <Preconditions>
+                        <Precondition Type="ClaimEquals" ExecuteActionsIf="true">
+                            <Value>testClaim</Value>
+                            <Value>false</Value>
+                            <Action>SkipThisOrchestrationStep</Action>
+                        </Precondition>
+                    </Preconditions>
                     <JourneyList>
                         <Candidate SubJourneyReferenceId="TotpFactor-Verify" />
                     </JourneyList>
                 </OrchestrationStep>
 
-                <OrchestrationStep Order="5" Type="SendClaims" CpimIssuerTechnicalProfileReferenceId="JwtIssuer"/>
+                <OrchestrationStep Order="6" Type="SendClaims" CpimIssuerTechnicalProfileReferenceId="JwtIssuer"/>
 
             </OrchestrationSteps>
             <ClientDefinition ReferenceId="DefaultWeb"/>
