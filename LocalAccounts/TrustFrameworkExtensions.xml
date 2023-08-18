@@ -15,13 +15,13 @@
 
     <BuildingBlocks>
         <ClaimsSchema>
-            <ClaimType Id="hasMfaEnabled">
-                <DataType>boolean</DataType>
-            </ClaimType>
-
-            <ClaimType Id="mfaRequestBody">
+            <ClaimType Id="mfaType">
                 <DataType>string</DataType>
             </ClaimType>
+
+<!--            <ClaimType Id="mfaRequestBody">-->
+<!--                <DataType>string</DataType>-->
+<!--            </ClaimType>-->
 
             <!--TOTP claims-->
             <ClaimType Id="emails">
@@ -224,14 +224,14 @@
 
             <!-- end of TOTP Claims Transforms-->
 
-            <ClaimsTransformation Id="GenerateRequestBody" TransformationMethod="GenerateJson">
-                <InputClaims>
-                    <InputClaim ClaimTypeReferenceId="objectId" TransformationClaimType="authId" />
-                </InputClaims>
-                <OutputClaims>
-                    <OutputClaim ClaimTypeReferenceId="mfaRequestBody" TransformationClaimType="outputClaim"/>
-                </OutputClaims>
-            </ClaimsTransformation>
+<!--            <ClaimsTransformation Id="GenerateRequestBody" TransformationMethod="GenerateJson">-->
+<!--                <InputClaims>-->
+<!--                    <InputClaim ClaimTypeReferenceId="objectId" TransformationClaimType="authId" />-->
+<!--                </InputClaims>-->
+<!--                <OutputClaims>-->
+<!--                    <OutputClaim ClaimTypeReferenceId="mfaRequestBody" TransformationClaimType="outputClaim"/>-->
+<!--                </OutputClaims>-->
+<!--            </ClaimsTransformation>-->
 
         </ClaimsTransformations>
 
@@ -561,23 +561,23 @@
                     <DisplayName>Validate user's input data and return loyaltyNumber claim</DisplayName>
                     <Protocol Name="Proprietary" Handler="Web.TPEngine.Providers.RestfulProvider, Web.TPEngine, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" />
                     <Metadata>
-                        <Item Key="ServiceUrl">https://8fd5-2003-dd-3f4b-7e00-c81b-3d6c-7456-d700.ngrok-free.app/v2/mfa</Item>
+                        <Item Key="ServiceUrl">https://ce2e-2a02-8108-9740-94-e9fa-233e-f5c3-193c.ngrok-free.app/v2/auth_users</Item>
                         <Item Key="AuthenticationType">ApiKeyHeader</Item>
-                        <Item Key="SendClaimsIn">Body</Item>
-                        <Item Key="ClaimUsedForRequestPayload">mfaRequestBody</Item>
+                        <Item Key="SendClaimsIn">QueryString</Item>
+                        <Item Key="ClaimUsedForRequestPayload">objectId</Item>
                     </Metadata>
                     <CryptographicKeys>
                         <Key Id="x-api-key" StorageReferenceId="B2C_1A_EucalyptusApiKey" />
                     </CryptographicKeys>
-                    <InputClaimsTransformations>
-                        <InputClaimsTransformation ReferenceId="GenerateRequestBody" />
-                    </InputClaimsTransformations>
+<!--                    <InputClaimsTransformations>-->
+<!--                        <InputClaimsTransformation ReferenceId="GenerateRequestBody" />-->
+<!--                    </InputClaimsTransformations>-->
                     <InputClaims>
-                        <InputClaim ClaimTypeReferenceId="mfaRequestBody" />
+                        <InputClaim ClaimTypeReferenceId="objectId" PartnerClaimType="authId" />
                     </InputClaims>
                     <OutputClaims>
                         <!-- PartnerClaimType can be omitted if it's the same as ClaimTypeReferenceId -->
-                        <OutputClaim ClaimTypeReferenceId="hasMfaEnabled" PartnerClaimType="hasMfaEnabled" />
+                        <OutputClaim ClaimTypeReferenceId="mfaType" PartnerClaimType="mfaType" />
                     </OutputClaims>
                 </TechnicalProfile>
             </TechnicalProfiles>
@@ -642,9 +642,9 @@
                 <!-- Call the TOTP enrollment ub journey. If user already enrolled the sub journey will not ask the user to enroll -->
                 <OrchestrationStep Order="4" Type="InvokeSubJourney">
                     <Preconditions>
-                        <Precondition Type="ClaimEquals" ExecuteActionsIf="true">
-                            <Value>hasMfaEnabled</Value>
-                            <Value>false</Value>
+                        <Precondition Type="ClaimEquals" ExecuteActionsIf="false">
+                            <Value>mfaType</Value>
+                            <Value>TOTP</Value>
                             <Action>SkipThisOrchestrationStep</Action>
                         </Precondition>
                     </Preconditions>
@@ -656,9 +656,9 @@
                 <!-- Call the TOTP validation sub journey-->
                 <OrchestrationStep Order="5" Type="InvokeSubJourney">
                     <Preconditions>
-                        <Precondition Type="ClaimEquals" ExecuteActionsIf="true">
-                            <Value>hasMfaEnabled</Value>
-                            <Value>false</Value>
+                        <Precondition Type="ClaimEquals" ExecuteActionsIf="false">
+                            <Value>mfaType</Value>
+                            <Value>TOTP</Value>
                             <Action>SkipThisOrchestrationStep</Action>
                         </Precondition>
                     </Preconditions>
